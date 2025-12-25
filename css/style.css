@@ -1,0 +1,233 @@
+/* ===============================
+   FONT & GLOBAL BASE
+================================ */
+@font-face {
+  font-family: bw2;
+  src: url(../assets/fonts/bw2.ttf);
+}
+
+@font-face {
+  font-family: "PressStart2P";
+  src: url(../assets/fonts/PressStart2P.ttf);
+}
+
+body {
+  background: #f4f4f4;
+  font-family: bw2, system-ui, PressStart2p;
+  font-size: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===============================
+   LOGO / HEADER
+================================ */
+.container h4 {
+  font-family: "PressStart2P", monospace;
+  font-size: 2rem;
+  color: #111;
+  margin: 0;
+  text-align: center;
+  text-shadow: 1px 1px #ccc;
+}
+
+/* ===============================
+   TYPOGRAPHY & UI SCALE
+================================ */
+h5, .card-body h5 {
+  font-size: 30px;
+}
+
+#questList h6 {
+  font-size: 25px;
+}
+
+.btn {
+  font-size: 20px;
+}
+
+.badge {
+  font-size: 1rem;
+  padding: 6px 8px;
+}
+
+.btn-group .btn {
+  font-family: monospace;
+}
+
+/* ===============================
+   TRAINER CARD
+================================ */
+.trainer-card {
+  background: #fafafa;
+  border: 2px solid #111;
+  border-radius: 8px;
+  cursor: default;
+  padding: 12px;
+}
+
+/* Name + Title */
+.trainer-name {
+  border: none;
+  background: transparent;
+  font-weight: bold;
+  font-size: 1.8rem; /* Bigger for username */
+  width: 100%;
+  margin: 0;
+  margin-left: -9px;
+}
+
+.trainer-name:focus {
+  outline: none;
+  border-bottom: 1px dashed #000;
+}
+
+.trainer-title {
+  font-size: 1.3rem;
+  color: #555;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ===============================
+   CATEGORY EXP
+================================ */
+#trainerCard h6 {
+  font-size: 1.5rem; /* Slightly bigger */
+  margin-top: 10px;
+}
+
+/* ===============================
+   EXP BAR
+================================ */
+.exp-bar {
+  width: 100%;
+  height: 8px;
+  background: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #111;
+  transition: width 0.3s ease;
+}
+
+/* ===============================
+   AVATAR
+================================ */
+.avatar-wrapper {
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.avatar-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.avatar-circle,
+.avatar-img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  text-align: center;
+  line-height: 64px;
+  font-weight: bold;
+  font-size: 28px;
+  user-select: none;
+  border: 2px solid #000;
+}
+
+/* ===============================
+   QUEST LIST
+================================ */
+.quest-item {
+  transition: transform 0.15s ease;
+}
+
+.quest-item:hover {
+  transform: translateX(4px);
+}
+
+.quest-item.done {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* ===============================
+   STATS PANEL
+================================ */
+#statsPanel {
+  animation: slideUp 0.25s ease;
+  font-size: 1.5rem;
+}
+
+/* ===============================
+   ANIMATIONS
+================================ */
+.slide-in { animation: slideIn 0.4s ease-out forwards; }
+
+.screen { position: relative; width: 100%; }
+
+.screen-enter { animation: slideIn 0.25s ease-out forwards; }
+.screen-exit { animation: slideOut 0.25s ease-in forwards; }
+
+.card.slide-in { box-shadow: 0 2px 0 #000; }
+
+@keyframes slideIn {
+  from { transform: translateX(16px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-16px); opacity: 0; }
+}
+@keyframes slideUp {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .trainer-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .trainer-name {
+    font-size: 1.5rem;
+  }
+
+  .category-exp {
+    font-size: 1.1rem;
+  }
+
+  .avatar-wrapper {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  h4 {
+    font-size: 1.5rem;
+  }
+
+  .trainer-name {
+    font-size: 1.3rem;
+  }
+
+  .category-exp {
+    font-size: 1rem;
+  }
+
+  .exp-bar { height: 6px; }
+}
+

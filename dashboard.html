@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Life RPG</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon.png" />
+    <link href="./css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="container py-3">
+      <div class="d-flex justify-content-between mb-3">
+        <h4>Life RPG</h4>
+        <button class="btn btn-sm btn-dark" onclick="logout()">Logout</button>
+      </div>
+
+      <!-- TRAINER CARD -->
+      <div id="trainerCard"></div>
+
+      <hr />
+
+      <!-- DAILY RESET -->
+      <h5>Daily Reset</h5>
+      <div id="dailyResetTimer" class="mb-3 text-dark fw-bold"></div>
+
+      <!-- QUESTS -->
+      <h5>Daily Quests</h5>
+      <div id="questList"></div>
+
+      <hr />
+
+      <!-- WEEKLY -->
+      <h5>Weekly Stats</h5>
+      <div id="weeklyStats"></div>
+
+      <!-- AVATAR UPLOAD -->
+      <input
+        type="file"
+        id="avatarInput"
+        accept="image/*"
+        style="display: none"
+      />
+    </div>
+
+    <script type="module">
+      import { watchAuth, logout } from "./js/auth.js";
+      import { loadCharacter, saveCharacter } from "./js/storage.js";
+      import {
+        createCharacter,
+        addExp,
+        checkDailyReset,
+      } from "./js/character.js";
+      import { renderTrainerCard, renderWeeklyStats } from "./js/ui.js";
+      import { renderQuests } from "./js/quests.js";
+
+      window.logout = logout;
+
+      let user;
+      let character;
+
+      // ===============================
+      // RENDER ALL UI
+      // ===============================
+      function renderAll() {
+        renderTrainerCard(character);
+        renderWeeklyStats(character);
+      }
+
+      // ===============================
+      // REACTIVE DAILY CHECK
+      // ===============================
+      async function reactiveDailyCheck() {
+        const todayStr = new Date().toISOString().slice(0, 10);
+
+        // If it's a new day OR quests are missing
+        if (character.stats.today.date !== todayStr) {
+          checkDailyReset(character);
+          await saveCharacter(user.uid, character);
+          renderAll();
+          renderQuests(character, async (exp, category) => {
+            addExp(character, exp, category);
+            await saveCharacter(user.uid, character);
+            renderAll();
+          });
+        }
+      }
+
+      // Check every 60 seconds
+      setInterval(reactiveDailyCheck, 60_000);
+
+      // ===============================
+      // DAILY RESET TIMER
+      // ===============================
+      function updateDailyResetTimer() {
+        const timerEl = document.getElementById("dailyResetTimer");
+        if (!timerEl) return;
+
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setHours(24, 0, 0, 0);
+        const diffMs = tomorrow - now;
+
+        const hours = Math.floor(diffMs / 1000 / 60 / 60);
+        const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+        const seconds = Math.floor((diffMs / 1000) % 60);
+
+        timerEl.textContent = `${hours.toString().padStart(2, "0")}:${minutes
+          .toString()
+          .padStart(
+            2,
+            "0",
+          )}:${seconds.toString().padStart(2, "0")} until daily reset`;
+      }
+
+      setInterval(updateDailyResetTimer, 1000);
+      updateDailyResetTimer();
+
+      function getMsUntilMidnight() {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setHours(24, 0, 0, 0);
+        return tomorrow - now;
+      }
+
+      async function performDailyReset() {
+        checkDailyReset(character);
+        await saveCharacter(user.uid, character);
+
+        renderAll();
+        renderQuests(character, async (exp, category) => {
+          addExp(character, exp, category);
+          await saveCharacter(user.uid, character);
+          renderAll();
+        });
+      }
+
+      function startDailyResetTimeout() {
+        setTimeout(async () => {
+          await performDailyReset();
+          startDailyResetTimeout(); // schedule next day
+        }, getMsUntilMidnight());
+      }
+
+      // ===============================
+      // AUTH WATCH
+      // ===============================
+      watchAuth(async (u) => {
+        if (!u) return (location.href = "index.html");
+
+        user = u;
+        character = await loadCharacter(u.uid);
+
+        if (!character) {
+          character = createCharacter(u.displayName || "Trainer");
+        }
+
+        // Ensure daily quests are correct on load
+        checkDailyReset(character);
+        await saveCharacter(user.uid, character);
+        renderAll();
+
+        renderQuests(character, async (exp, category) => {
+          addExp(character, exp, category);
+          await saveCharacter(user.uid, character);
+          renderAll();
+        });
+
+        // Start daily reset timeout
+        startDailyResetTimeout();
+      });
+
+      // ===============================
+      // AVATAR UPLOAD
+      // ===============================
+      window.triggerAvatarUpload = () =>
+        document.getElementById("avatarInput").click();
+
+      window.clearAvatar = async () => {
+        character.avatar = null;
+        await saveCharacter(user.uid, character);
+        renderAll();
+      };
+
+      window.updateName = async (name) => {
+        character.name = name || "Trainer";
+        await saveCharacter(user.uid, character);
+        renderAll();
+      };
+
+      document
+        .getElementById("avatarInput")
+        .addEventListener("change", async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          const resized = await resizeAndCropImage(file);
+          character.avatar = resized;
+
+          await saveCharacter(user.uid, character);
+          renderAll();
+        });
+
+      function resizeAndCropImage(file, size = 128) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          const reader = new FileReader();
+
+          reader.onload = () => (img.src = reader.result);
+          reader.readAsDataURL(file);
+
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = size;
+            canvas.height = size;
+
+            const ctx = canvas.getContext("2d");
+            const min = Math.min(img.width, img.height);
+
+            ctx.drawImage(
+              img,
+              (img.width - min) / 2,
+              (img.height - min) / 2,
+              min,
+              min,
+              0,
+              0,
+              size,
+              size,
+            );
+
+            resolve(canvas.toDataURL("image/jpeg", 0.9));
+          };
+        });
+      }
+    </script>
+  </body>
+</html>
