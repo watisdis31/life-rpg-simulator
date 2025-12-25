@@ -174,10 +174,8 @@ A few things to be very clear about:
 - ✅ I **cannot** read or write other users’ data  
 - ✅ You **cannot** read or write other users’ data  
 - ❌ This app does **NOT** connect to **ANY** of your personal and important data
-- ❌ No credit cards, no spying, no funny 
+- ❌ No credit cards, no spying, no funny business
 - **This is a personal project, not a bank**
-
-I am not responsible if you accidentally give the internet admin access.
 
 ---
 
