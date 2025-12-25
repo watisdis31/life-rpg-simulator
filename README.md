@@ -11,7 +11,7 @@ This is a **gamified life tracker** inspired by classic RPGs and the feeling of 
 ---
 
 ## ▶️ Live Demo
-👉 **[PUT YOUR LIVE DEMO LINK HERE]**  
+https://liferpg-ecru.vercel.app/
 *(yes it actually works)*
 
 ---
