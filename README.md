@@ -194,8 +194,6 @@ This project is:
 - A productivity tool
 - A joke
 - A coping mechanism
-- A retro RPG fantasy
-- Probably over-engineered
 
 If it helps you do **one useful thing a day**,  
 it has already succeeded.
