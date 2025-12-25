@@ -66,7 +66,7 @@ Why?
 - JavaScript does not respect sleep schedules
 
 Refreshing *usually* works,  
-but **close + reopen = guaranteed fresh day**.
+but **close + re-open = guaranteed fresh day**.
 
 > Think of it like saving at a Pokémon Center before a new day.
 
