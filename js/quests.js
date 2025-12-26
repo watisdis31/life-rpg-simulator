@@ -35,9 +35,10 @@ export function renderQuests(character, onCompleteCallback) {
 
       q.done = true;
 
-      // If all quests are done, clear the list
+      // If all quests are done, mark today as complete
       if (character.quests.daily.every((q) => q.done)) {
         character.quests.daily = [];
+        character.stats.today.questsCompleted = true;
       }
 
       if (onCompleteCallback) await onCompleteCallback(q.exp, q.category);

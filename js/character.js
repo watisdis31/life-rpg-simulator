@@ -23,9 +23,15 @@ export function createCharacter(name) {
     level: 1,
     exp: 0,
     avatar: null,
+    timezoneOffset: new Date().getTimezoneOffset(),
     categoryExp: {},
     stats: {
-      today: { date: today, totalExp: 0, byCategory: {} },
+      today: {
+        date: today,
+        totalExp: 0,
+        byCategory: {},
+        questsCompleted: false,
+      },
       weekly: {},
     },
     badges: [],
@@ -77,7 +83,7 @@ export function addExp(character, exp, category) {
    DAILY RESET
 ================================ */
 export function checkDailyReset(character) {
-  const todayStr = getToday();
+  const todayStr = getLocalToday(character);
 
   // NEW DAY → full reset
   if (!character.stats.today || character.stats.today.date !== todayStr) {
@@ -102,6 +108,7 @@ export function checkDailyReset(character) {
       date: todayStr,
       totalExp: 0,
       byCategory: {},
+      questsCompleted: false,
     };
 
     character.completedToday = [];
@@ -111,9 +118,8 @@ export function checkDailyReset(character) {
     return;
   }
 
-  // SAME DAY → only fix truly broken old accounts
   if (!character.quests) {
-    character.quests = { daily: generateDailyQuests() };
+    character.quests = { daily: [] };
   }
 }
 
@@ -161,16 +167,28 @@ export function getWeeklyOrTodayStats(character) {
 ================================ */
 export function calculateBadges(character) {
   const badges = [];
+  const hasAnyHistory = Object.keys(character.stats.weekly || {}).length > 0;
+
+  if (
+    hasAnyHistory &&
+    character.stats.today.date !== getLocalToday(character)
+  ) {
+    if (missedYesterday(character)) {
+      badges.push("😴 Missed a Day");
+    }
+
+    if (missedDaysInRow(character, 3)) {
+      badges.push("💀 Missed 3 Days in a Row");
+    }
+  }
+
+  if (!hasAnyHistory) return badges;
 
   if (character.stats.today.totalExp > 0) badges.push("🟢 Productive Today");
   if (character.stats.today.totalExp === 0) badges.push("🦥 Lazy Day");
 
   const weeks = Object.values(character.stats.weekly || {});
   if (weeks.some((w) => w.totalExp >= 100)) badges.push("🔥 Grinder");
-
-  if (missedYesterday(character)) {
-    badges.push("😴 Missed a Day");
-  }
 
   // 🆕 Streak badges
   const streak = getCurrentStreak(character);
@@ -197,11 +215,6 @@ export function calculateBadges(character) {
     badges.push(`🏆 ${years}-Year Streak`);
   }
 
-  // 🆕 Missed 3 days badge
-  if (missedDaysInRow(character, 3)) {
-    badges.push("💀 Missed 3 Days in a Row");
-  }
-
   return badges;
 }
 
@@ -210,6 +223,7 @@ export function calculateBadges(character) {
 ================================ */
 export function getTrainerTitle(character) {
   const badges = calculateBadges(character);
+  const streak = getCurrentStreak(character);
 
   /* 🎮 Ultra Rare RNG Titles */
   if (Math.random() < 0.002) return "💎 Touches Code, Still Not Rich";
@@ -236,7 +250,9 @@ export function getTrainerTitle(character) {
   if (badges.includes("🦥 Lazy Day") && streak === 0)
     return "🛋️ Professional Procrastinator";
 
-  if (missedDaysInRow(character, 3)) return "💀 Fell Off the Grindset";
+  if (hasPreviousDays(character)) {
+    if (missedDaysInRow(character, 3)) return "💀 Fell Off the Grindset";
+  }
 
   /* 😴 Low Effort Energy */
   if (character.stats.today.totalExp > 0 && character.stats.today.totalExp < 20)
@@ -345,4 +361,31 @@ function missedDaysInRow(character, daysMissed = 3) {
   }
 
   return true;
+}
+
+function hasPreviousDays(character) {
+  const activeDays = getActiveDays(character);
+  if (activeDays.size === 0) return false;
+
+  const earliest = [...activeDays].sort()[0];
+  const earliestDate = new Date(earliest);
+  const today = new Date(getToday());
+
+  const diffDays = Math.floor((today - earliestDate) / 86400000);
+
+  return diffDays >= 1;
+}
+
+function getLocalToday(character) {
+  // Fallback for old accounts
+  if (
+    !character ||
+    typeof character.timezoneOffset !== "number"
+  ) {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  const offsetMs = character.timezoneOffset * 60 * 1000;
+  const localTime = new Date(Date.now() - offsetMs);
+  return localTime.toISOString().slice(0, 10);
 }
