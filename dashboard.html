@@ -74,28 +74,6 @@
       }
 
       // ===============================
-      // REACTIVE DAILY CHECK
-      // ===============================
-      async function reactiveDailyCheck() {
-        const todayStr = new Date().toISOString().slice(0, 10);
-
-        // If it's a new day OR quests are missing
-        if (character.stats.today.date !== todayStr) {
-          checkDailyReset(character);
-          await saveCharacter(user.uid, character);
-          renderAll();
-          renderQuests(character, async (exp, category) => {
-            addExp(character, exp, category);
-            await saveCharacter(user.uid, character);
-            renderAll();
-          });
-        }
-      }
-
-      // Check every 60 seconds
-      setInterval(reactiveDailyCheck, 60_000);
-
-      // ===============================
       // DAILY RESET TIMER
       // ===============================
       function updateDailyResetTimer() {

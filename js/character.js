@@ -17,7 +17,11 @@ export const CATEGORIES = [
    CHARACTER CREATION
 ================================ */
 export function createCharacter(name) {
-  const today = getToday();
+  const offset = new Date().getTimezoneOffset();
+  const today = new Date(Date.now() - offset * 60000)
+    .toISOString()
+    .slice(0, 10);
+
   const character = {
     name,
     level: 1,
@@ -58,7 +62,7 @@ export function addExp(character, exp, category) {
     (character.categoryExp[category] || 0) + exp;
 
   // WEEKLY stats
-  const weekKey = getWeekKey();
+  const weekKey = getWeekKey(character);
   if (!character.stats.weekly[weekKey]) {
     character.stats.weekly[weekKey] = {
       totalExp: 0,
@@ -83,6 +87,31 @@ export function addExp(character, exp, category) {
    DAILY RESET
 ================================ */
 export function checkDailyReset(character) {
+  // ===============================
+  // 🛠️ MIGRATION FIX FOR OLD USERS
+  // ===============================
+  if (typeof character.timezoneOffset !== "number") {
+    character.timezoneOffset = new Date().getTimezoneOffset();
+  }
+
+  if (!character.stats) {
+    character.stats = { today: {}, weekly: {} };
+  }
+
+  if (!character.stats.today) {
+    character.stats.today = {
+      date: getLocalToday(character),
+      totalExp: 0,
+      byCategory: {},
+      questsCompleted: false,
+    };
+  }
+
+  // Old accounts might miss this flag
+  if (typeof character.stats.today.questsCompleted !== "boolean") {
+    character.stats.today.questsCompleted = false;
+  }
+
   const todayStr = getLocalToday(character);
 
   // NEW DAY → full reset
@@ -140,7 +169,7 @@ export function generateDailyQuests() {
    WEEKLY STATS
 ================================ */
 export function getWeeklyOrTodayStats(character) {
-  const weekKey = getWeekKey();
+  const weekKey = getWeekKey(character);
   const week = character.stats.weekly[weekKey];
 
   if (week && week.totalExp > 0) {
@@ -286,15 +315,17 @@ function getToday() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function getWeekKey() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const week = Math.ceil(
-    ((d - new Date(year, 0, 1)) / 86400000 +
-      new Date(year, 0, 1).getDay() +
-      1) /
-      7,
-  );
+function getWeekKey(character) {
+  const offset = character.timezoneOffset ?? 0;
+
+  const now = new Date(Date.now() - offset * 60000);
+
+  const year = now.getFullYear();
+  const startOfYear = new Date(year, 0, 1);
+  const diffDays = Math.floor((now - startOfYear) / 86400000);
+
+  const week = Math.ceil((diffDays + startOfYear.getDay() + 1) / 7);
+
   return `${year}-W${week}`;
 }
 
@@ -331,7 +362,7 @@ function getCurrentStreak(character) {
   const activeDays = getActiveDays(character);
   let streak = 0;
 
-  let day = new Date(getToday());
+  let day = new Date(getLocalToday(character));
 
   while (true) {
     const dayStr = day.toISOString().slice(0, 10);
@@ -349,7 +380,7 @@ function missedDaysInRow(character, daysMissed = 3) {
   const activeDays = getActiveDays(character);
   let misses = 0;
 
-  let day = new Date(getToday());
+  let day = new Date(getLocalToday(character));
   day.setDate(day.getDate() - 1); // start from yesterday
 
   while (misses < daysMissed) {
@@ -369,7 +400,7 @@ function hasPreviousDays(character) {
 
   const earliest = [...activeDays].sort()[0];
   const earliestDate = new Date(earliest);
-  const today = new Date(getToday());
+  const today = new Date(getLocalToday(character));
 
   const diffDays = Math.floor((today - earliestDate) / 86400000);
 
@@ -378,10 +409,7 @@ function hasPreviousDays(character) {
 
 function getLocalToday(character) {
   // Fallback for old accounts
-  if (
-    !character ||
-    typeof character.timezoneOffset !== "number"
-  ) {
+  if (!character || typeof character.timezoneOffset !== "number") {
     return new Date().toISOString().slice(0, 10);
   }
 

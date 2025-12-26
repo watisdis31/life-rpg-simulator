@@ -1,13 +1,13 @@
 import { generateDailyQuests } from "./character.js";
 
 export const QUESTS = [
-  { text: "Clean your room", exp: 10, category: "discipline" },
-  { text: "Eat twice per day minimum", exp: 20, category: "health" },
-  { text: "Drink water", exp: 5, category: "health" },
-  { text: "Exercise 10 minutes", exp: 10, category: "strength" },
-  { text: "Take a shower", exp: 10, category: "hygiene" },
-  { text: "Take out the trash", exp: 5, category: "discipline" },
-  { text: "Study or do your work", exp: 15, category: "intelligence" },
+  { text: "Clean your room", exp: 10, category: "Discipline" },
+  { text: "Eat twice per day minimum", exp: 20, category: "Health" },
+  { text: "Drink water", exp: 5, category: "Health" },
+  { text: "Exercise 10 minutes", exp: 10, category: "Strength" },
+  { text: "Take a shower", exp: 10, category: "Hygiene" },
+  { text: "Take out the trash", exp: 5, category: "Discipline" },
+  { text: "Study or do your work", exp: 15, category: "Intelligence" },
 ];
 
 export function renderQuests(character, onCompleteCallback) {
@@ -15,7 +15,6 @@ export function renderQuests(character, onCompleteCallback) {
   if (!questListEl) return;
 
   // Ensure daily quests exist (for old accounts)
-  if (!character.quests) character.quests = { daily: [] };
   if (!character.quests) character.quests = {};
   if (!character.quests.daily) character.quests.daily = [];
 
