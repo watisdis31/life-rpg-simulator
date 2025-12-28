@@ -62,7 +62,7 @@ export function addExp(character, exp, category) {
     (character.categoryExp[category] || 0) + exp;
 
   // WEEKLY stats
-  const weekKey = getWeekKey(character);
+  const weekKey = character.stats.today.weekKey || getWeekKey(character);
   if (!character.stats.weekly[weekKey]) {
     character.stats.weekly[weekKey] = {
       totalExp: 0,
@@ -104,6 +104,7 @@ export function checkDailyReset(character) {
       totalExp: 0,
       byCategory: {},
       questsCompleted: false,
+      weekKey: getWeekKey(character),
     };
   }
 
@@ -169,7 +170,7 @@ export function generateDailyQuests() {
    WEEKLY STATS
 ================================ */
 export function getWeeklyOrTodayStats(character) {
-  const weekKey = getWeekKey(character);
+  const weekKey = character.stats.today.weekKey || getWeekKey(character);
   const week = character.stats.weekly[weekKey];
 
   if (week && week.totalExp > 0) {
