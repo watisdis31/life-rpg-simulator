@@ -154,8 +154,6 @@ Titles are **semi-random**, slightly chaotic, and legally binding.
 - Stored safely
 - Judged silently
 
-You can also remove it and return to default blob mode.
-
 ---
 
 ## 🔐 Firebase Security Disclaimer (READ THIS)
