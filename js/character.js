@@ -1,5 +1,3 @@
-// js/character.js
-
 import { QUESTS } from "./quests.js"; // <-- import master quest list
 
 /* ===============================
@@ -220,26 +218,26 @@ export function calculateBadges(character) {
   const weeks = Object.values(character.stats.weekly || {});
   if (weeks.some((w) => w.totalExp >= 100)) badges.push("🔥 Grinder");
 
-  // 🆕 Streak badges
+  // Streak badges
   const streak = getCurrentStreak(character);
 
   if (streak >= 3) {
     badges.push(`🔥 ${streak}-Day Streak`);
   }
 
-  // 🆕 Week streak
+  // Week streak
   const weekStreak = Math.floor(streak / 7);
   if (weekStreak >= 1) {
     badges.push(`💎 ${weekStreak}-Week Streak`);
   }
 
-  // 🆕 Month streak
+  // Month streak
   const months = Math.floor(streak / 30);
   if (months >= 1) {
     badges.push(`🌙 ${months}-Month Streak`);
   }
 
-  // 🆕 Year streak
+  // Year streak
   const years = Math.floor(streak / 365);
   if (years >= 1) {
     badges.push(`🏆 ${years}-Year Streak`);
@@ -330,7 +328,7 @@ function getWeekKey(character) {
   return `${year}-W${week}`;
 }
 
-// 🆕 Detect if yesterday was missed
+// Detect if yesterday was missed
 function missedYesterday(character) {
   if (!character.stats?.today?.date) return false;
 
@@ -348,7 +346,7 @@ function missedYesterday(character) {
   return true; // missed yesterday
 }
 
-// 🆕 Get set of active dates
+// Get set of active dates
 function getActiveDays(character) {
   const days = new Set();
   const weeks = Object.values(character.stats.weekly || {});
@@ -358,7 +356,7 @@ function getActiveDays(character) {
   return days;
 }
 
-// 🆕 Calculate current streak
+// Calculate current streak
 function getCurrentStreak(character) {
   const activeDays = getActiveDays(character);
   let streak = 0;
@@ -376,7 +374,7 @@ function getCurrentStreak(character) {
   return streak;
 }
 
-// 🆕 Missed N days in a row
+// Missed N days in a row
 function missedDaysInRow(character, daysMissed = 3) {
   const activeDays = getActiveDays(character);
   let misses = 0;

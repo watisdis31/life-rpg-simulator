@@ -1,5 +1,8 @@
-// js/ui.js
-import { calculateBadges, getWeeklyOrTodayStats, getTrainerTitle } from "./character.js";
+import {
+  calculateBadges,
+  getWeeklyOrTodayStats,
+  getTrainerTitle,
+} from "./character.js";
 
 export function renderTrainerCard(character) {
   const avatarHTML = character.avatar
@@ -9,7 +12,10 @@ export function renderTrainerCard(character) {
   let categoryHTML = "";
   if (character.categoryExp && Object.keys(character.categoryExp).length > 0) {
     categoryHTML = Object.entries(character.categoryExp)
-      .map(([cat, exp]) => `<div>${cat}: +${exp} (Lvl ${calculateCategoryLevel(exp)})</div>`)
+      .map(
+        ([cat, exp]) =>
+          `<div>${cat}: +${exp} (Lvl ${calculateCategoryLevel(exp)})</div>`,
+      )
       .join("");
   } else {
     categoryHTML = "<i>No EXP yet</i>";
@@ -33,7 +39,9 @@ export function renderTrainerCard(character) {
       </div>
 
       <div class="mt-2" id="badges">
-        ${calculateBadges(character).map((b) => `<span class="badge bg-dark me-1">${b}</span>`).join("")}
+        ${calculateBadges(character)
+          .map((b) => `<span class="badge bg-dark me-1">${b}</span>`)
+          .join("")}
       </div>
 
       <div class="mt-2 category-exp">

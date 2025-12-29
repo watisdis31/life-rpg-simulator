@@ -50,7 +50,7 @@ function resizeImage(file, size = 256) {
 export async function uploadAvatar(userId, file) {
   const blob = await resizeImage(file);
 
-  // ✅ MUST match Storage rules
+  // MUST match Storage rules
   const avatarRef = ref(storage, `avatars/${userId}`);
 
   await uploadBytes(avatarRef, blob);

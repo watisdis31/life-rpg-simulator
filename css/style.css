@@ -1,100 +1,149 @@
 /* ===============================
-   FONT & GLOBAL BASE
+   CORE RPG COLORS
 ================================ */
-@font-face {
-  font-family: bw2;
-  src: url(../assets/fonts/bw2.ttf);
-}
+:root {
+  --bg-dungeon: #1b2430;
+  --bg-panel: #2e3a4f;
+  --bg-panel-alt: #3b4f6b;
+  --bg-parchment: #f4e9c9;
 
-@font-face {
-  font-family: "PressStart2P";
-  src: url(../assets/fonts/PressStart2P.ttf);
-}
+  --border-dark: #0b0f14;
+  --border-light: #6c86a5;
 
-body {
-  background: #f4f4f4;
-  font-family: bw2, system-ui, PressStart2p;
-  font-size: 1.5rem;
-  margin: 0;
-  padding: 0;
+  --text-main: #f5f5f5;
+  --text-muted: #c7c7c7;
+  --accent-gold: #f6c453;
+  --accent-cyan: #4de3ff;
 }
 
 /* ===============================
-   LOGO / HEADER
+   GLOBAL BASE
+================================ */
+body {
+  background: repeating-linear-gradient(
+    45deg,
+    #1b2430,
+    #1b2430 8px,
+    #1f2b3a 8px,
+    #1f2b3a 16px
+  );
+  color: var(--text-main);
+  font-family: bw2, PressStart2P, monospace;
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+/* ===============================
+   TEXT CONTRAST FIX
+================================ */
+h5,
+h6,
+p,
+small,
+div {
+  color: var(--text-main);
+}
+
+.trainer-title,
+.text-muted {
+  color: #cfd8e3 !important;
+}
+
+/* Light panel text */
+.quest-item {
+  color: #1a1a1a;
+}
+
+#weeklyStats,
+#trainerCard {
+  color: var(--text-main);
+}
+
+/* ===============================
+   HEADER
 ================================ */
 .container h4 {
-  font-family: "PressStart2P", monospace;
-  font-size: 2rem;
-  color: #111;
-  margin: 0;
+  font-family: "PressStart2P";
   text-align: center;
-  text-shadow: 1px 1px #ccc;
+  font-size: 40px;
+  color: var(--accent-gold);
+  text-shadow: 3px 3px #000;
+  margin-bottom: 16px;
 }
 
 /* ===============================
-   TYPOGRAPHY & UI SCALE
+   PANELS (BW2 STYLE)
 ================================ */
-h5, .card-body h5 {
-  font-size: 30px;
-}
-
-#questList h6 {
-  font-size: 25px;
-}
-
-.btn {
-  font-size: 20px;
-}
-
-.badge {
-  font-size: 1rem;
-  padding: 6px 8px;
-}
-
-.btn-group .btn {
-  font-family: monospace;
+.trainer-card,
+#questList,
+#weeklyStats {
+  background: linear-gradient(180deg, var(--bg-panel-alt), var(--bg-panel));
+  border: 5px solid var(--border-dark);
+  padding: 16px;
+  box-shadow:
+    inset 0 0 0 3px var(--border-light),
+    6px 6px 0 #000;
 }
 
 /* ===============================
-   TRAINER CARD
+   TRAINER NAME (INTERACTIVE!)
 ================================ */
-.trainer-card {
-  background: #fafafa;
-  border: 2px solid #111;
-  border-radius: 8px;
-  cursor: default;
-  padding: 12px;
-}
-
-/* Name + Title */
 .trainer-name {
-  border: none;
+  font-size: 1.8rem;
   background: transparent;
-  font-weight: bold;
-  font-size: 1.8rem; /* Bigger for username */
-  width: 100%;
-  margin: 0;
-  margin-left: -9px;
+  border: none;
+  color: var(--accent-cyan);
+  cursor: pointer;
+  transition:
+    transform 0.12s steps(2),
+    color 0.12s;
+  margin-left: -10px;
+}
+
+.trainer-name:hover {
+  color: var(--accent-gold);
+  transform: translateY(-2px);
+  text-shadow: 2px 2px #000;
 }
 
 .trainer-name:focus {
   outline: none;
-  border-bottom: 1px dashed #000;
+  border-bottom: 3px dashed var(--accent-gold);
 }
 
+/* Title */
 .trainer-title {
-  font-size: 1.3rem;
-  color: #555;
-  font-style: italic;
-  margin-top: 2px;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin-left: -9px;
 }
 
 /* ===============================
-   CATEGORY EXP
+   AVATAR (VERY IMPORTANT)
 ================================ */
-#trainerCard h6 {
-  font-size: 1.5rem; /* Slightly bigger */
-  margin-top: 10px;
+.avatar-wrapper {
+  display: inline-block;
+  padding: 6px;
+  background: var(--bg-panel-alt);
+  border: 4px solid var(--border-dark);
+  box-shadow: 4px 4px #000;
+  cursor: pointer;
+  transition:
+    transform 0.12s steps(2),
+    box-shadow 0.12s;
+}
+
+.avatar-wrapper:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px var(--accent-cyan);
+}
+
+.avatar-img,
+.avatar-circle {
+  width: 72px;
+  height: 72px;
+  image-rendering: pixelated;
+  border: 3px solid var(--border-dark);
 }
 
 /* ===============================
@@ -102,132 +151,169 @@ h5, .card-body h5 {
 ================================ */
 .exp-bar {
   width: 100%;
-  height: 8px;
-  background: #ddd;
-  border-radius: 4px;
+  height: 12px;
+  background-color: #1a1f2e;
+  border: 3px solid #000;
+  outline: 2px solid #e8e8e8;
+  box-shadow: 2px 2px 0 #000;
   overflow: hidden;
-  margin-top: 4px;
+  position: relative;
 }
 
+/* Actual EXP fill */
 .progress-bar {
   height: 100%;
-  background: #111;
-  transition: width 0.3s ease;
+  width: 0%;
+  background-color: #4fd2ff;
+
+  image-rendering: pixelated;
+
+  /* IMPORTANT: chunky RPG fill */
+  transition: width 0.4s steps(10);
+
+  position: relative;
+}
+
+.progress-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0 2px,
+    transparent 2px 6px
+  );
+
+  opacity: 0.3;
+  animation: expShimmer 2.5s steps(12) infinite;
+}
+
+@keyframes expShimmer {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 48px 0;
+  }
 }
 
 /* ===============================
-   AVATAR
-================================ */
-.avatar-wrapper {
-  display: inline-block;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.avatar-wrapper:hover {
-  transform: scale(1.05);
-}
-
-.avatar-circle,
-.avatar-img {
-  display: block;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  text-align: center;
-  line-height: 64px;
-  font-weight: bold;
-  font-size: 28px;
-  user-select: none;
-  border: 2px solid #000;
-}
-
-/* ===============================
-   QUEST LIST
+   DAILY QUESTS (GAME MENU)
 ================================ */
 .quest-item {
-  transition: transform 0.15s ease;
+  font-size: 1.35rem;
+  padding: 18px 16px;
+  margin-bottom: 10px;
+
+  background: linear-gradient(180deg, #f2e4b8, #e1d19a);
+
+  border: 4px solid #000;
+  box-shadow: 4px 4px #000;
+
+  cursor: pointer;
+  position: relative;
+
+  transition:
+    transform 0.1s steps(2),
+    box-shadow 0.1s steps(2);
+}
+
+.quest-item::before {
+  content: "▶";
+  position: absolute;
+  left: -24px;
+  opacity: 0;
+  color: var(--accent-gold);
 }
 
 .quest-item:hover {
-  transform: translateX(4px);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px #000;
 }
 
+.quest-item:hover::before {
+  opacity: 1;
+}
+
+/* Completed quest */
 .quest-item.done {
-  opacity: 0.5;
+  opacity: 0.55;
   text-decoration: line-through;
 }
 
 /* ===============================
-   STATS PANEL
+   WEEKLY STATS
 ================================ */
-#statsPanel {
-  animation: slideUp 0.25s ease;
-  font-size: 1.5rem;
+#weeklyStats {
+  background: linear-gradient(180deg, #24364d, #1b2a3a);
 }
 
 /* ===============================
-   ANIMATIONS
+   BUTTONS (SHOVEL KNIGHT STYLE)
 ================================ */
-.slide-in { animation: slideIn 0.4s ease-out forwards; }
+.btn {
+  font-family: "PressStart2P";
+  font-size: 1rem;
+  padding: 14px 18px;
+  background: var(--accent-gold);
+  color: #000;
 
-.screen { position: relative; width: 100%; }
-
-.screen-enter { animation: slideIn 0.25s ease-out forwards; }
-.screen-exit { animation: slideOut 0.25s ease-in forwards; }
-
-.card.slide-in { box-shadow: 0 2px 0 #000; }
-
-@keyframes slideIn {
-  from { transform: translateX(16px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  border: 4px solid #000;
+  box-shadow: 4px 4px #000;
 }
-@keyframes slideOut {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(-16px); opacity: 0; }
-}
-@keyframes slideUp {
-  from { transform: translateY(8px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 /* ===============================
-   RESPONSIVE
+   DAILY RESET TIMER (CRITICAL)
+================================ */
+#dailyResetTimer {
+  font-family: "PressStart2P", monospace;
+  font-size: 1.1rem;
+
+  color: #ffffff !important;
+  background: linear-gradient(180deg, #1a2233, #0f1522);
+
+  border: 4px solid #000;
+  box-shadow: 4px 4px #000;
+
+  padding: 14px 16px;
+  display: inline-block;
+
+  letter-spacing: 1px;
+  text-shadow: 2px 2px #000;
+}
+
+/* ===============================
+    MOBILE
 ================================ */
 @media (max-width: 768px) {
-  .trainer-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 10px;
-  }
-
-  .trainer-name {
+  body {
     font-size: 1.5rem;
   }
 
-  .category-exp {
-    font-size: 1.1rem;
-  }
-
-  .avatar-wrapper {
-    margin-bottom: 8px;
-  }
-}
-
-@media (max-width: 576px) {
-  h4 {
+  .quest-item {
     font-size: 1.5rem;
+    padding: 24px 18px;
   }
 
-  .trainer-name {
-    font-size: 1.3rem;
+  .avatar-img,
+  .avatar-circle {
+    width: 88px;
+    height: 88px;
   }
 
-  .category-exp {
-    font-size: 1rem;
+  .btn {
+    padding: 18px 22px;
   }
-
-  .exp-bar { height: 6px; }
 }
 
+@media (max-width: 480px) {
+  .exp-bar {
+    height: 16px;
+  }
+}

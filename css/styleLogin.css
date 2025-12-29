@@ -1,198 +1,230 @@
 /* ===============================
-   RETRO RPG LOGIN SCREEN
+   FONTS
 ================================ */
 @font-face {
   font-family: bw2;
   src: url(../assets/fonts/bw2.ttf);
 }
 
+@font-face {
+  font-family: "PressStart2P";
+  src: url(../assets/fonts/PressStart2P.ttf);
+}
+
+/* ===============================
+   GLOBAL BASE
+================================ */
+html,
 body {
-  background-color: #0b0f1a;
-  color: #e8e8e8;
-  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
   image-rendering: pixelated;
 }
 
-/* Scanlines (stronger, intentional) */
+body {
+  font-family: bw2, system-ui, sans-serif;
+  background-color: #1a1f2e;
+  color: #f4f4f4;
+
+  /* Pixel RPG tiled background */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      #1a1f2e 0px,
+      #1a1f2e 24px,
+      #20263a 24px,
+      #20263a 48px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px,
+      transparent 16px
+    );
+}
+
+/* ===============================
+   AMBIENT PIXEL PARTICLES
+================================ */
+body::before,
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.03),
-    rgba(255,255,255,0.03) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  opacity: 0.35;
+  z-index: 0;
+
+  background-image:
+    radial-gradient(#ffffff 1px, transparent 1px),
+    radial-gradient(#9adfff 1px, transparent 1px);
+
+  background-size: 64px 64px, 96px 96px;
+  background-position: 0 0, 32px 48px;
+
+  opacity: 0.15;
+  animation: particleDrift 60s steps(60) infinite;
 }
 
-/* Center box = classic RPG dialog */
+body::after {
+  opacity: 0.08;
+  animation-duration: 90s;
+}
+
+@keyframes particleDrift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-128px);
+  }
+}
+
+/* ===============================
+   LOGIN PANEL (RPG DIALOG)
+================================ */
 .rpg-login-panel {
-  background-color: #1c2333;
-  border: 4px solid #e8e8e8;
-  padding: 28px;
-  width: 340px;
+  position: relative;
+  z-index: 2;
 
-  box-shadow:
-    6px 6px 0 #000;
-}
+  background-color: #2a3555;
+  padding: 28px 24px;
+  width: min(92vw, 420px);
 
-/* Pixel title ONLY */
-.rpg-title {
-  font-family: "Press Start 2P", monospace;
-  font-size: 1.2rem;
-  line-height: 1.5;
-  letter-spacing: 1px;
+  border: 4px solid #000;
+  outline: 3px solid #e8e8e8;
+
+  box-shadow: 8px 8px 0 #000;
   text-align: center;
 }
 
-/* Subtitle = simple, no flair */
+/* ===============================
+   PIXEL BORDER CRAWL (BW2 STYLE)
+================================ */
+.rpg-login-panel::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  pointer-events: none;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #ffe38a 0 4px,
+      transparent 4px 16px
+    );
+
+  border: 4px solid transparent;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  animation: borderCrawl 2.5s steps(16) infinite;
+}
+
+@keyframes borderCrawl {
+  from { background-position: 0 0; }
+  to { background-position: 64px 0; }
+}
+
+/* ===============================
+   TITLE & TEXT
+================================ */
+.rpg-title {
+  font-family: "PressStart2P", monospace;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px #000;
+}
+
 .login-subtitle {
-    font-family: bw2;
   font-size: 1.2rem;
-  margin-top: 6px;
   opacity: 0.9;
+  margin-bottom: 20px;
 }
 
-/* Menu button (looks selectable) */
+/* ===============================
+   RPG BUTTON (MENU ITEM)
+================================ */
 .rpg-btn {
-  display: block;
-  font-family: bw2;
   width: 100%;
-  background-color: #2a3555;
-  border: 3px solid #e8e8e8;
-  color: #e8e8e8;
-  font-size: 1.2rem;
-  padding: 10px 8px;
-  margin-top: 18px;
-  text-align: left;
+  font-family: bw2;
+  font-size: 1.4rem;
+  padding: 16px 14px;
 
-  box-shadow: 4px 4px 0 #000;
-}
-
-/* Fake cursor */
-.rpg-btn::before {
-  content: "▶";
-  margin-right: 8px;
-}
-
-/* Hover = menu selection */
-.rpg-btn:hover {
   background-color: #3a4a7a;
+  color: #fff;
+
+  border: 3px solid #fff;
+  box-shadow: 4px 4px 0 #000;
+
+  text-align: left;
+  cursor: pointer;
 }
 
-/* Active = pressed */
+/* Menu cursor */
+.rpg-btn::before {
+  content: "▶ ";
+  animation: cursorBlink 1s steps(1) infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.rpg-btn:hover {
+  background-color: #4f63a6;
+}
+
 .rpg-btn:active {
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 #000;
 }
 
-/* Footer hint */
-.login-hint {
-  margin-top: 16px;
-  font-size: 0.7rem;
-  opacity: 0.7;
-  text-align: center;
-  font-family: bw2;
-  font-size: 1rem;
-}
-
 /* ===============================
-   RETRO ANIMATIONS
+   PRESS START HINT
 ================================ */
-
-/* Cursor blink */
-@keyframes cursorBlink {
-  0%, 49% {
-    opacity: 1;
-  }
-  50%, 100% {
-    opacity: 0;
-  }
-}
-
-/* Press Start blink */
-@keyframes pressStartBlink {
-  0%, 60% {
-    opacity: 1;
-  }
-  61%, 100% {
-    opacity: 0;
-  }
-}
-
-/* Apply blink to ▶ cursor */
-.rpg-btn::before {
-  animation: cursorBlink 1s steps(1) infinite;
-}
-
-/* PRESS START animation */
 .login-hint {
+  margin-top: 20px;
+  font-family: bw2;
+  font-size: 1.1rem;
+  opacity: 0.85;
   animation: pressStartBlink 1.2s steps(1) infinite;
 }
 
+@keyframes pressStartBlink {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0; }
+}
+
 /* ===============================
-   MOBILE / TABLET SAFETY
+   MOBILE FRIENDLY (NO ZOOM)
 ================================ */
-
-/* Prevent accidental zoom & overflow */
-html, body {
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Safe area for iOS notch */
-body {
-  padding:
-    env(safe-area-inset-top)
-    env(safe-area-inset-right)
-    env(safe-area-inset-bottom)
-    env(safe-area-inset-left);
-}
-
-/* Phone layout */
 @media (max-width: 480px) {
-  .login-box {
-    width: 92%;
-    padding: 18px;
+  .rpg-login-panel {
+    padding: 24px 18px;
   }
 
-  .game-title {
-    font-size: 28px;
-    margin-bottom: 6px;
+  .rpg-title {
+    font-size: 1.1rem;
   }
 
-  .subtitle {
-    font-size: 11px;
-    margin-bottom: 14px;
+  .login-subtitle {
+    font-size: 1.1rem;
   }
 
   .rpg-btn {
-    font-size: 14px;
-    padding: 14px 18px;
+    font-size: 1.3rem;
+    padding: 18px 16px;
   }
 
   .login-hint {
-    font-size: 10px;
-    margin-top: 14px;
-  }
-}
-
-/* Tablets / iPads */
-@media (min-width: 481px) and (max-width: 1024px) {
-  .login-box {
-    width: 360px;
-  }
-
-  .game-title {
-    font-size: 34px;
-  }
-
-  .rpg-btn {
-    font-size: 15px;
-    padding: 14px 22px;
+    font-size: 1rem;
   }
 }

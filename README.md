@@ -6,12 +6,13 @@ Welcome to **Life RPG**, where:
 - Forgetting to do anything makes the game judge you
 - Productivity is optional, consequences are not
 
-This is a **gamified life tracker** inspired by classic RPGs and the feeling of *“I should probably do something today”*.
+This is a **gamified life tracker** inspired by classic RPGs and the feeling of  
+*“I should probably do something today.”*
 
 ---
 
 ## ▶️ Live Demo
-https://liferpg-ecru.vercel.app/
+https://liferpg-ecru.vercel.app/  
 *(yes it actually works)*
 
 ---
@@ -49,26 +50,30 @@ Which is the game politely telling you:
 
 ---
 
-## ⏰ Daily Reset (⚠️ IMPORTANT, READ OR SUFFER)
+## ⏰ Daily Reset (Now Smarter, Less Annoying)
 
 Daily quests reset at **midnight (your local time)**.
 
-### HOWEVER 🧠💥
+### Good news 🎉
 
-For the **most reliable reset**, it is **recommended to:**
+You **do NOT need to close and re-open the website anymore**.
 
-✅ **Close and re-open the website** after midnight  
+The app now:
+- Detects midnight correctly
+- Regenerates quests automatically
+- Handles daily resets reliably
 
-Why?
+### Just in case (paranoia mode):
 
-- Browsers love pausing timers
-- Background tabs are lazy
-- JavaScript does not respect sleep schedules
+If you want to be **100% sure**, you can:
+- 🔄 **Refresh the page**
 
-Refreshing *usually* works,  
-but **close + re-open = guaranteed fresh day**.
+That’s it.  
+No browser restarts.  
+No tab sacrifices.  
+No yelling at JavaScript.
 
-> Think of it like saving at a Pokémon Center before a new day.
+> Think of it like the game autosaving — refreshing is just checking the save file.
 
 ---
 
@@ -78,9 +83,8 @@ but **close + re-open = guaranteed fresh day**.
 - Levels never reset
 - Regret does
 
-If you somehow have max EXP bar and don’t level up:
+If you somehow have a full EXP bar and don’t level up:
 - Refresh
-- Re-open
 - Or stare at the screen threateningly (optional)
 
 ---
@@ -119,7 +123,7 @@ The game tracks **consecutive active days**.
 - 🔥 **X-Day Streak**
 - 💎 **X-Week Streak**
 - 🌙 **X-Month Streak**
-- 🏆 **X-Year Streak** (touching legendary status)
+- 🏆 **X-Year Streak** (legendary behavior)
 
 Miss a day → streak breaks  
 Miss multiple days → emotional damage
@@ -169,22 +173,28 @@ Security is enforced through:
 So even if someone copies the key:
 > They still get **nothing** 🎉
 
-A few things to be very clear about:
+To be very clear:
 
 - ✅ I **cannot** read or write other users’ data  
 - ✅ You **cannot** read or write other users’ data  
-- ❌ This app does **NOT** connect to **ANY** of your personal and important data
-- ❌ No credit cards, no spying, no funny business
-- **This is a personal project, not a bank**
+- ❌ This app does **NOT** connect to **ANY** of your personal or sensitive data  
+- ❌ No credit cards, no spying, no funny business  
+- This is a **personal project**, not a bank
 
 ---
 
-## 🧪 Known Quirks (a.k.a. Not Bugs, Just Personality)
+## 🧪 Known Quirks (a.k.a. Personality Traits)
 
-- Daily reset works best when reopening the site
-- Browser sleep can delay timers
-- DevTools time-travel testing may confuse the app
-- The game may roast you (emotionally)
+This app is stable, but still has character:
+
+- Refreshing the page instantly syncs all stats
+- Time travel via DevTools may confuse reality
+- The game may roast you emotionally
+- Titles are not responsible for your ego
+
+If something looks weird:
+- Refresh once  
+- If it’s still weird, it’s probably intentional ✨
 
 ---
 
